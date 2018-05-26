@@ -1,3 +1,9 @@
+const not = (fn) => (...args) => !fn(args);
+
+const isEmpty = (arr) => arr.length === 0;
+
+const isNotEmpty = (arr) => arr.length !== 0;
+
 class BinarySearchTree {
   constructor(value) {
     this.value = value;
@@ -5,14 +11,50 @@ class BinarySearchTree {
     this.right = null;
   }
 
-  depthFirstForEach(cb) {
-    /* Your code here */
-    
+  depthFirstForEachIterative(cb) {
+    const stack = [this];
+
+    while (isNotEmpty(stack)) {
+      const currNode = stack.pop();
+      cb(currNode.value);
+
+      currNode.right && stack.push(currNode.right);
+      currNode.left && stack.push(currNode.left);
+    }
   }
 
-  breadthFirstForEach(cb) {
-    /* Your code here */
+  depthFirstForEachRecursive(cb, currNode = this) {
+    if (currNode === null) {
+      return 'Must use a non-empty tree.';
+    }
 
+    cb(currNode.value);
+    currNode.left && this.depthFirstForEachRecursive(cb, currNode.left);
+    currNode.right && this.depthFirstForEachRecursive(cb, currNode.right);
+  }
+
+  breadthFirstForEachIterative(cb) {
+    const queue = [this];
+
+    while (isNotEmpty(queue)) {
+      const currNode = queue.shift();
+      cb(currNode.value);
+
+      currNode.left && queue.push(currNode.left);
+      currNode.right && queue.push(currNode.right);
+    }
+  }
+
+  breadthFirstForEachRecursive(cb, queue = [this]) {
+    if (isEmpty(queue)) return;
+
+    const currNode = queue.shift();
+    cb(currNode.value);
+
+    currNode.left && queue.push(currNode.left);
+    currNode.right && queue.push(currNode.right);
+
+    this.breadthFirstForEachRecursive(cb, queue);
   }
 
   insert(value) {
